@@ -1,19 +1,40 @@
 kind: pipeline
 name: default
 
+clone:
+  disable: true
+
 environment:
   DOCKER_HOST: tcp://docker-in-docker:2375
+  DOCKER_CLI_EXPERIMENTAL: enabled
 
 steps:
+- name: clone
+  image: alpine/git
+  commands:
+  - git clone http://gitea.wg/ncrmro/py-ffmpeg-docker-images.git .
+  - git checkout $DRONE_COMMIT
+
 - name: Docker Information
-  image: docker/compose:alpine-1.26.2
+  image: ncrmro/docker-buildx:19.03.10
+  environment:
+    DOCKER_USERNAME: ncrmro
+    DOCKER_PASSWORD:
+      from_secret: dockerhub_access_token
   commands:
   - docker version
-  - docker-compose version
+  - mkdir -p ~/.docker/cli-plugins
+  - docker buildx version
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+  - docker buildx create --name multiarch --use
+  - docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 -t ncrmro/py-ffmpeg-docker-images:latest -t ncrmro/py-ffmpeg-docker-images:1.0.11 --push .
 
 services:
 - name: docker-in-docker
   docker:
   image: docker:19.03.12-dind
-  command: ["dockerd", "--host", "0.0.0.0", "--insecure-registry", "registry.wg", "--registry-mirror", "http://registry_cache:5000"]
+  command: ["dockerd", "--host", "0.0.0.0", "--experimental", "--insecure-registry", "registry.wg", "--registry-mirror", "http://registry_cache:5000"]
   privileged: true
+
+# 46e0feeb-fa1d-4ace-bc2f-de8dd6b0409c
