@@ -1,6 +1,9 @@
 kind: pipeline
 name: default
 
+clone:
+  skip_verify: true
+
 environment:
   DOCKER_HOST: tcp://docker-in-docker:2375
 
