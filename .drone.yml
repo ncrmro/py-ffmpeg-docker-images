@@ -1,0 +1,19 @@
+kind: pipeline
+name: default
+
+environment:
+  DOCKER_HOST: tcp://docker-in-docker:2375
+
+steps:
+- name: Docker Information
+  image: docker/compose:alpine-1.26.2
+  commands:
+  - docker version
+  - docker-compose version
+
+services:
+- name: docker-in-docker
+  docker:
+  image: docker:19.03.12-dind
+  command: ["dockerd", "--host", "0.0.0.0", "--insecure-registry", "registry.wg", "--registry-mirror", "http://registry_cache:5000"]
+  privileged: true
