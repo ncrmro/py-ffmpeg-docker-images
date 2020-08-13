@@ -17,10 +17,10 @@ steps:
 
 - name: Docker Information
   image: ncrmro/docker-buildx:19.03.10
-    environment:
-      DOCKER_USERNAME: ncrmro
-      DOCKER_PASSWORD:
-        from_secret: dockerhub_access_token
+  environment:
+    DOCKER_USERNAME: ncrmro
+    DOCKER_PASSWORD:
+      from_secret: dockerhub_access_token
   commands:
   - docker version
   - mkdir -p ~/.docker/cli-plugins
