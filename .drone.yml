@@ -1,13 +1,16 @@
 kind: pipeline
 name: default
 
-clone:
-  skip_verify: true
-
 environment:
   DOCKER_HOST: tcp://docker-in-docker:2375
 
 steps:
+- name: clone
+  image: alpine/git
+  commands:
+  - git clone http://gitea.wg/ncrmro/py-ffmpeg-docker-images.git .
+  - git checkout $DRONE_COMMIT
+
 - name: Docker Information
   image: docker/compose:alpine-1.26.2
   commands:
