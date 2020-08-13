@@ -26,5 +26,5 @@ services:
 - name: docker-in-docker
   docker:
   image: docker:19.03.12-dind
-  command: ["dockerd", "--host", "0.0.0.0", "--insecure-registry", "registry.wg", "--registry-mirror", "http://registry_cache:5000"]
+  command: ["dockerd", "--host", "0.0.0.0", "-experimental", "--insecure-registry", "registry.wg", "--registry-mirror", "http://registry_cache:5000"]
   privileged: true
