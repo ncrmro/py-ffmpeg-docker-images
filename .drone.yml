@@ -20,6 +20,10 @@ steps:
   commands:
   - docker version
   - docker-compose version
+  - mkdir -p ~/.docker/cli-plugins
+  - wget https://github.com/docker/buildx/releases/download/v0.4.1/buildx-v0.4.1.darwin-amd64
+  - mv buildx-v0.4.1.darwin-amd64 ~/.docker/cli-plugins/docker-buildx
+  - chmod a+x ~/.docker/cli-plugins/docker-buildx
   - docker buildx version
 
 services:
