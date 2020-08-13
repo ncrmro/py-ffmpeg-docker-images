@@ -16,6 +16,7 @@ steps:
   commands:
   - docker version
   - docker-compose version
+  - docker buildx version
 
 services:
 - name: docker-in-docker
