@@ -17,13 +17,18 @@ steps:
 
 - name: Docker Information
   image: ncrmro/docker-buildx:19.03.10
+    environment:
+      DOCKER_USERNAME: ncrmro
+      DOCKER_PASSWORD:
+        dockerhub_access_token: docker_username
   commands:
   - docker version
   - mkdir -p ~/.docker/cli-plugins
   - docker buildx version
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --name multiarch --use
-  - docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 -t ncrmro/py-ffmpeg-docker-images:latest -t ncrmro/py-ffmpeg-docker-images:1.0.11 --push .
+  - docker buildx build --platform linux/amd64 -t ncrmro/py-ffmpeg-docker-images:latest -t ncrmro/py-ffmpeg-docker-images:1.0.11 --push .
 
 services:
 - name: docker-in-docker
@@ -31,3 +36,5 @@ services:
   image: docker:19.03.12-dind
   command: ["dockerd", "--host", "0.0.0.0", "--experimental", "--insecure-registry", "registry.wg", "--registry-mirror", "http://registry_cache:5000"]
   privileged: true
+
+# 46e0feeb-fa1d-4ace-bc2f-de8dd6b0409c
