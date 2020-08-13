@@ -16,7 +16,7 @@ steps:
   - git checkout $DRONE_COMMIT
 
 - name: Docker Information
-  image: docker:19.03.10
+  image: ncrmro/docker-buildx:19.03.10
   commands:
   - docker version
   - mkdir -p ~/.docker/cli-plugins
