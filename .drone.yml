@@ -36,5 +36,3 @@ services:
   image: docker:19.03.12-dind
   command: ["dockerd", "--host", "0.0.0.0", "--experimental", "--insecure-registry", "registry.wg", "--registry-mirror", "http://registry_cache:5000"]
   privileged: true
-
-# 46e0feeb-fa1d-4ace-bc2f-de8dd6b0409c
